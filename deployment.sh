@@ -12,7 +12,7 @@ apt update
 apt install python-pip
 
 #install postgres
-apt-get install postgresql
+apt install postgresql
 
     
 #create database and table
