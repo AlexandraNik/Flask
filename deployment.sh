@@ -7,54 +7,43 @@
 # 
 ##########################################
 
-#check for root priviliges
-if [[ "$UID" != "0" ]]; then
+#install pip
+apt update
+apt install python-pip
 
-    echo "You do not have root priviliges!"
-    exit 1
-
-else 
-
-
-    #install pip
-    apt update
-    apt install python-pip
-
-    #install postgres
-    apt-get install postgresql
+#install postgres
+apt-get install postgresql
 
     
-    #create database and table
-    createdb -h localhost -U postgres learningflask
+#create database and table
+createdb -h localhost -U postgres learningflask
 
-    psql -h localhost -U postgres learningflask -c "CREATE TABLE users (uid serial PRIMARY KEY,
+psql -h localhost -U postgres learningflask -c "CREATE TABLE users (uid serial PRIMARY KEY,
         firstname VARCHAR(100) not null,
         lastname VARCHAR(1000) not null,
         email VARCHAR(120) not null unique,
         pwdhash VARCHAR(100) not null);"
 
 
-    #install virtual environment    
-    pip install virtualenv
+#install virtual environment    
+pip install virtualenv
 
 
-    #create and connect to virtual environment
-    virtualenv venv
-    source venv/bin/activate
+#create and connect to virtual environment
+virtualenv venv
+source venv/bin/activate
 
-    #install Flask 
-    pip install Flask
+#install Flask 
+pip install Flask
 
-    pip install -U Flask-SQLAlchemy
-    pip install -U Flask-WTF
-    pip install psycopg2-binary
+pip install -U Flask-SQLAlchemy
+pip install -U Flask-WTF
+pip install psycopg2-binary
 
-    pip install email_validator
+pip install email_validator
 
-    pip install geocode
-    pip install geocoder
+pip install geocode
+pip install geocoder
 
 
-    python routes.py
-
-fi
+python routes.py
