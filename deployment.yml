@@ -10,17 +10,37 @@
           state: present
           update_cache: yes   
 
-      - name: install virtualenv module
+      - name: install virtualenv module and psycopg2(for postgresql module to work)
         pip: 
-          name: virtualenv
-          state: present    
+          name: 
+            - virtualenv
+            - psycopg2-binary
+          state: present 
 
+      - name: Create app database
+        postgresql_db:
+          state: present
+          name: learningflask
+        become_user: postgres
+
+
+      - name: Create table
+        postgresql_table:
+          db: learningflask
+          name: users
+          columns:
+            - uid serial primary key
+            - firstname
+            - lastname
+            - email
+            - pwdhash
+    
       - name: create virtual environment folder
         file:
-          name: /Flask/venv
+          name: /venv
           state: directory    
 
       - name: Install specified python requirements in virtualenv
         pip:
           requirements: requirements.txt
-          virtualenv: /Flask/venv    
+          virtualenv: /venv    
