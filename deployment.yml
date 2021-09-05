@@ -1,0 +1,26 @@
+---
+  - hosts: localhost
+    become: true
+    tasks:
+      - name: install pip
+        apt: 
+          name:      
+            - python-pip
+            - postgresql
+          state: present
+          update_cache: yes   
+
+      - name: install virtualenv module
+        pip: 
+          name: virtualenv
+          state: present    
+
+      - name: create virtual environment folder
+        file:
+          name: /Flask/venv
+          state: directory    
+
+      - name: Install specified python requirements in virtualenv
+        pip:
+          requirements: requirements.txt
+          virtualenv: /Flask/venv    
