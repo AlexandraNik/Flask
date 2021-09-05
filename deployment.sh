@@ -34,16 +34,20 @@ virtualenv venv
 source venv/bin/activate
 
 #install Flask 
-pip install Flask
+#pip install Flask
 
-pip install -U Flask-SQLAlchemy
-pip install -U Flask-WTF
-pip install psycopg2-binary
+#pip install -U Flask-SQLAlchemy
+#pip install -U Flask-WTF
+#pip install psycopg2-binary
 
-pip install email_validator
+#pip install email_validator
 
-pip install geocode
-pip install geocoder
+#pip install geocode
+#pip install geocoder
+
+
+#install requirements
+pip install -r requirements.txt
 
 
 python routes.py
