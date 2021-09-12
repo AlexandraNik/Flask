@@ -24,16 +24,16 @@
         become_user: postgres
 
 
-      - name: Create table
-        postgresql_table:
-          db: learningflask
-          name: users
-          columns:
-            - uid serial primary key
-            - firstname
-            - lastname
-            - email
-            - pwdhash
+      #- name: Create table
+      #  postgresql_table:
+      #    db: learningflask
+      #    name: users
+      #    columns:
+      #      - uid serial primary key
+      #      - firstname
+      #      - lastname
+      #      - email
+      #      - pwdhash
     
       - name: create virtual environment folder
         file:
