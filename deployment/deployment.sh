@@ -71,16 +71,9 @@ psql -h localhost -U postgres learningflask -c "CREATE TABLE users (uid serial P
 
 
 #install virtual environment    
-pip3 install virtualenv
+pip3 install pipenv
 
+#install requirements from Pipfile
+pipenv install
 
-#create and connect to virtual environment
-virtualenv venv
-source venv/bin/activate
-
-
-#install requirements
-pip3 install -r requirements.txt
-
-
-python routes.py
+pipenv run python ../application/routes.py
