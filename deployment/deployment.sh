@@ -61,7 +61,10 @@ fi
 
     
 #create database and table
-createdb -h localhost -U postgres learningflask
+echo "Creating database."
+read -p "Please enter database name: " db_name
+
+createdb -h localhost -U postgres "$db_name"
 
 psql -h localhost -U postgres learningflask -c "CREATE TABLE users (uid serial PRIMARY KEY,
         firstname VARCHAR(100) not null,
