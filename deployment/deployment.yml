@@ -1,46 +1,92 @@
 ---
   - hosts: localhost
     become: true
+    vars:
+      app_dir: ../application/ 
+      db_name: newdb
+      table_name: users
+
+
+
     tasks:
-      - name: install pip
+      - name: install pip, postgres and nginx
         apt: 
           name:      
-            - python-pip
+            - python3-pip
             - postgresql
+            - nginx
           state: present
           update_cache: yes   
 
-      - name: install virtualenv module and psycopg2(for postgresql module to work)
-        pip: 
-          name: 
-            - virtualenv
-            - psycopg2-binary
-          state: present 
+
+      - name: start nginx
+        service:
+          name: nginx
+          state: started
+
+      - name: configure nginx site
+        copy: 
+          src: flask_app.conf
+          dest: /etc/nginx/sites-available/flask_app.conf
+          mode: '0644'
+        
+      - name: de-activate default nginx site
+        file: 
+          path: /etc/nginx/sites-enabled/default
+          state: absent
+
+      - name: activate new nginx site
+        file: 
+          src: /etc/nginx/sites-available/flask_app.conf 
+          dest: /etc/nginx/sites-enabled/flask_app.conf 
+          state: link
+
+      - name: restart nginx
+        service:
+          name: nginx
+          state: restarted  
+
+
+
+
 
       - name: Create app database
         postgresql_db:
           state: present
-          name: learningflask
-        become_user: postgres
+          name: "{{ db_name }}" 
+        become_user: postgres 
 
 
       #- name: Create table
-      #  postgresql_table:
-      #    db: learningflask
-      #    name: users
-      #    columns:
-      #      - uid serial primary key
-      #      - firstname
-      #      - lastname
-      #      - email
-      #      - pwdhash
+         #postgresql_table:
+          #db: "{{ db_name }}" 
+          #name: "{{ table_name }}" 
+          #columns:
+          #- uid serial primary key
+          #- firstname text
+          #- lastname text
+          #- email text
+          #- pwdhash text
     
-      - name: create virtual environment folder
-        file:
-          name: /venv
-          state: directory    
 
-      - name: Install specified python requirements in virtualenv
-        pip:
-          requirements: requirements.txt
-          virtualenv: /venv    
+      - name: install virtual environment
+        pip: 
+          name: 
+            - pipenv
+          state: present 
+          executable: pip3
+
+      - name: install dependencies via pipenv
+        command: pipenv install
+        args:
+          chdir: "{{ app_dir }}" 
+
+      #- name: run gunicorn with a config file
+        #gunicorn:
+          #app: 'wsgi'
+          #chdir: "{{ app_dir }}" 
+          #conf: 'gunicorn.cfg'    
+
+      #- name: start the app
+      #  command: pipenv run python ../application/routes.py   
+       
